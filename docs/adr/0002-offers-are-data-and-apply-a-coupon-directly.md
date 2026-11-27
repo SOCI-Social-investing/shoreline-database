@@ -34,7 +34,12 @@ subscription webhook marks the claim redeemed.
   `is_active = false`.
 - The coupon's own Stripe settings (percent, duration, `applies_to` products,
   `redeem_by`) still bound the discount. Because every plan tier's monthly and
-  yearly prices can share one Stripe product, plan and term eligibility is
-  checked by the backend, not by the coupon.
+  yearly prices can share one Stripe product, eligibility is checked by the
+  backend, not by the coupon: the chosen price must be in the row's
+  `eligible_price_ids` and bill on one of its `eligible_terms`
+  (`20261127030000`). Listing exact prices on the row, rather than mapping
+  prices to tiers through backend env settings, means each environment's row
+  is self-contained — staging's tier settings were incomplete and refused
+  every offer checkout. `eligible_plans` only feeds the banner's fine print.
 - A claimed offer can't be deleted (`ON DELETE RESTRICT`); it is history.
 - Existing Companies can be given an offer by inserting a `company_offers` row.
